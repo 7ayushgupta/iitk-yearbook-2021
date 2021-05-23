@@ -1,0 +1,120 @@
+{
+	"0": {
+		"pic": [
+			"https://drive.google.com/uc?id=1nqJ6J4cGgF9Up6UooqWyBT-C3zuSLMAA&export=download",
+			"https://drive.google.com/uc?id=1-_zHeLjfBZlYTJZJC8ZK7m5mlxQFdUmb&export=download",
+			"https://drive.google.com/uc?id=1tpRHXzWlbgu4BhD86IUb6ABQm4qA3WPS&export=download",
+			"https://drive.google.com/uc?id=1LDt1jgGGPWhbpIbCJpRd3CiaTSoAqyKQ&export=download",
+			"https://drive.google.com/uc?id=10LOuprVwBAHUrv7glAZmEqW2ccE_12s2&export=download",
+			"https://drive.google.com/uc?id=1N4AyimR8gQkH668L3Btbvs26_UvvKd7S&export=download",
+			"https://drive.google.com/uc?id=1M7tof4dGnx27UHBsLeoRPP-6ujcryKf9&export=download",
+			"https://drive.google.com/uc?id=1Mj1ZVKAlzsOnIsOdC_7stKbWiyMOYJAK&export=download",
+			"https://drive.google.com/uc?id=1oWu4c6AK2sOtGQOGpcKMWr5Z-xZlgaO1&export=download",
+			"https://drive.google.com/uc?id=16dHjqTBSiPcyrNduFRgV3vS9VsbmkTbA&export=download"
+		],
+		"dp": 0,
+		"_id": "608c3b0c5f09e258136d7c74",
+		"roll": "170586",
+		"__v": 0,
+		"bio": "I am smiling that it all happened,\nthose ups, those downs, and those mighty big frowns.\nI know myself so much more!\n(not to mention I spent my time photographing moors 🦚)\nThanks to the people, the place, the life here,\nI shall never forget you all.\nAs I part, I leave behind a piece of my heart\nIn this beautiful garden of life and memories.",
+		"code": "70e4770dfb01db812f2c7ea6c169ab3614e5ca9c6d43e876f3ec005cc62d0fce",
+		"iitk": "rohangpt@iitk.ac.in",
+		"name": "Rohan  Gupta",
+		"other": "rohan.gupta1999@gmail.com",
+		"phone": "840000958",
+		"poll": [
+			{
+				"_id": "608c4503819323d199d4740a",
+				"qid": 0,
+				"response": "I have packed all those things up :) Small memoirs like my racket, chocolate wrappers and, hold your breath, memories!"
+			},
+			{
+				"_id": "608c4503819323d199d4740b",
+				"qid": 1,
+				"response": "You push yourself and you'll love to see yourself after these 4 years. Not too much tension, and also family and career please give no second place to it!"
+			},
+			{
+				"_id": "608c4503819323d199d4740c",
+				"qid": 2,
+				"response": "Maybe my first and second antaragnis. Cycling and walking in that festive mood, and talking to so many new people. And the bulla sessions, will miss them :')"
+			},
+			{
+				"_id": "608c4503819323d199d4740d",
+				"qid": 3,
+				"response": "\"Chaapaaaa broo!!!\" - PK Kelkar"
+			},
+			{
+				"_id": "608c4503819323d199d4740e",
+				"qid": 4,
+				"response": "3"
+			},
+			{
+				"_id": "608c4503819323d199d4740f",
+				"qid": 5,
+				"response": "Chaapa"
+			},
+			{
+				"_id": "608c4503819323d199d47410",
+				"qid": 6,
+				"response": "Oat Rooftop"
+			}
+		],
+		"username": "rohangpt",
+		"comments": [
+			{
+				"text": "Got to know this prodigy and a humble being in the first year summer. Shared with you the experience of the only successful trip during these four years of IITK (baaki sab to dhari reh gyi), what an awesome experience it was. The thought of that palatable food at your home still salivates me. Had we been in campus right now, surely would have spent some more time with you. Hope we meet someday in future. ",
+				"author": "Kunal  Sharma",
+				"visibility": false,
+				"_id": "608d2b49819323d199d47632"
+			},
+			{
+				"text": "Yo मेरे-बाद-Wing-के-सबसे-समझदार-आदमी!\n\n-    तेरा Memoir लिख रहा हूँ। लंबा काम है। रात गहरा चुकी है, हमारे कमरे की light बंद होने का समय है। भवजीत के कमरे को जाता हूँ।  \n       बीच में अभिषेक का कमरा पड़ेगा। तुझे मारकर, हॉकी मैदान के बाहर दफना कर, इसे आत्म-हत्या दिखाने का जो षड्यन्त्र है, उससे इसकी चर्चा करता जाऊँगा। उम्मीद है Roommate के Suicide पर Double-दस्से वाला दावा सच्चा हो, वरना तेरा ये बलिदान व्यर्थ जाएगा। \n       फिर कल Weekend है - कॅम्पस घूमने चलेंगे। गर्मी की धूप में OAT देखेंगे, बारिश में भीगे-चश्मे रास्ता खोजते Airstrip से लौटेंगे। Phone में कहीं कोई गाना बजा के नाच लेंगे, Photo खींचने का competition भी होगा और wing लौटकर किसी कमरे में बकचोदी भी। थक-हार के कमरे में आएंगे, दूसरों को कुढ़ाते हुए अपने 2 पंखे चलाएंगे, और मस्त सोएंगे; बाकी लोग \"हाय गर्मी\" का नृत्य करें अपने बिस्तर पर, हमें मतलब नहीं। \n      अगले दिन मैं तो फुरसत से ही उठूँगा; उठूँगा तो तुझे पढ़ता पाऊँगा, थोड़ा अपराधबोध होगा मुझे। फिर तेरे दस्से की जरूरत को, अपनी बेफ़िक्री के आगे रखकर, अपने बर्तावों में फ़र्क को तर्कसंगत ठहराऊँगा। निश्चिंत हो जाऊँगा।\n      लड़कियों पर भी चर्चा छिड़ेगी। निरी फूहड़। मेरी भाषा और लहजे में तो शिष्टाचार ही महकता है, मगर तुम अपने मासूम चेहरे और लखनवी लहजे से फूहड़ बात करके हमें हैरान करना। गालियाँ तो हालांकि तुमसे दी नहीं जाएंगी। \n\n-    दोस्त अब तुमने खाली कमरे में बिस्तर बिछा लिया है। ठीक है तुम्हारी जरूरतें हैं, पर यदा-कदा अपने Roomie से बात करने तो आ जाया करो। तुम रहते हो कमरे में तो लगता है जीवन सा है यहाँ। अकेले कमरे में मनहूस खामोशी जकड़ लेती है मुझे। \n\n-    अब हम बड़े हो चुके हैं। फ़िज़ूल बातें और अंतहीन बहसें तो first-year तक थीं। अब जीवन में ग़म दस्तक दे चुके हैं। जिम्मेदारी कि हमसे उम्मीद भी कंधों पर बोझ डाले है, दिल उथल-पुथल में व्यस्त है। अपने-अपने काम भी हैं सबके। फिर भी वक़्त चुरा कर बात कर लेते हैं, मन हल्का कर लेते हैं। मुझे तुमपर पूरा भरोसा है जो अपने गहरे राज़ तुम्हारे सामने खोल देता हूँ। औरों की नज़रें मेरी गिनी-चुनी उपलब्धियां तलाशती हैं, उनसे मेरी बातों का वजन नापती हैं; मेरी आकांक्षाओं को झिड़क देती हैं। तुम मगर मुझपर भरोसा जता कर मुझे आत्म-विश्वास देते हो।\n______________________________\n\nदोस्त! हम संयोग से मिले, मगर मुझे तुम्हारे साथ की आदत लग गई है। तुम्हारा रंग मुझपर चढ़ा है, मेरा रंग भी तुम पर। तुम्हारी जरूरत महसूस होगी दोस्त! जैसे हम विदा हुए, ये तो कोई कायदा न था। वो बातचीत अंतिम के लिहाज़ से बहुत छोटी थी। वो Pizza अंतिम सहभोज के लिहाज़ से एकदम फीके। वो दिन भी बेहद तेज़ गुज़रा। ये 4 साल बेहद तेज़ गुज़रे। \n\nमिलेंगे। निश्चित ही। Video का काम बाकी है। Trip का उल्हाना भी सबके सिर है। भविष्य की उम्मीदों के धुंधलके स्वभाव के विपरीत, इसकी अनिश्चितता को चीर, यह वादा दो - मिलेंगे। तब तक...\n\nऐ दोस्त! ओ Roomie मेरे!\nअलविदा।",
+				"author": "Shrey  Jain",
+				"visibility": false,
+				"_id": "60a18b18819323d199d47c9a"
+			},
+			{
+				"text": "I think you are freak inside, but a genuine calm person outside! Interesting person in the IITK.\n Wish you loooooots of success in the year ahead. ",
+				"author": "Reithick  A",
+				"visibility": false,
+				"_id": "60a27eb6819323d199d47d6c"
+			},
+			{
+				"text": "Yooooooooooo Beta Tester!!\nBahot chaapu ho bhai tum. Damn man, it was one heck of a journey that we had together. There were lows, highs, HIGHs and what not. From spending the darkest semester together to having fun together in the last one month at iitk it was a very nimce journey - a really special one. I will never forget that journey. Thank you for being there throughout the journey, thanks for being there when I needed someone. Damn I remember we started bonding by being project partner in CSE courses and damn we did a lot of course assignments, projects together. Thanks for covering up for me when I was not contributing well in some of the projects. All the best for your future bro. I know it is going to be awesome and you are going to achieve great things kyunki tum utne chapu ho and you will do it, for sure!! Love you man!!\n Also, trips plan karte hai jald hi!!",
+				"author": "Mahajan Dipak Anil",
+				"visibility": false,
+				"_id": "60a43f40819323d199d4810f"
+			},
+			{
+				"text": "Hey Rohan,\nIt was great to have you around in PSO201. It's been a pleasure knowing you bro 😊.  I hope our paths meet again someday 🤞. Meanwhile, all the best man 👍, let's try to do great things in life. Cya ✌️.",
+				"author": "Ayush Hitesh Soneria",
+				"visibility": false,
+				"_id": "60a5475c819323d199d484ad"
+			},
+			{
+				"text": "Hello Rohan, we never bonded tightly but it was fun to get to know you in the last few years, even though just a little bit. Wishing you all the success in life, brother. Humesha aise hi chill and dedicated rehna. All the best. Stay happy and healthy. Take care.  \nBye!",
+				"author": "Dhawal  Raturi",
+				"visibility": false,
+				"_id": "60a55553819323d199d4856d"
+			},
+			{
+				"text": "Yo bro...!!\n\nUss din bhand hokar kya khatarnaak naache the bhai tum. Kaafi ache aur cute insaan ho yaar.... Aisa hee haste muskuraate raho bhai.... \n\nAll the best bro for future.",
+				"author": "Kushagra Gupta (R Gupta)",
+				"visibility": false,
+				"_id": "60a628df819323d199d48b57"
+			},
+			{
+				"text": "Hi Rohan!\nYou are awesome!!!",
+				"author": "Yashika",
+				"visibility": false,
+				"_id": "60a64a1e819323d199d48da8"
+			},
+			{
+				"text": "1 2 3, 1 2 3, drink\n1 2 3, 1 2 3, drink\n1 2 3, 1 2 3, drink\nThrow 'em back till\nI lose count\n\nI'm gonna swing\nfrom the chandelier\n\nMemoir in progress....tab tak yahi gaate hai saath m uss din to nahi ho paaya",
+				"author": "Kuldeep  Singh",
+				"visibility": false,
+				"_id": "60a6b9ad819323d199d4918d"
+			}
+		]
+	}
+}
