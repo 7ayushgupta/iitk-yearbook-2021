@@ -10,7 +10,8 @@ let currentUserRoll = null;
 let userViewMode = 'received'; // 'received' or 'written'
 
 // Visibility filter state
-let visibilityMode = 'public'; // 'public' or 'private'
+let showPublic = true;
+let showPrivate = false;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
@@ -221,9 +222,12 @@ function setupEventListeners() {
         if (togglePublic) {
             togglePublic.addEventListener('click', () => {
                 try {
-                    visibilityMode = 'public';
-                    togglePublic.classList.add('active');
-                    if (togglePrivate) togglePrivate.classList.remove('active');
+                    showPublic = !showPublic;
+                    if (showPublic) {
+                        togglePublic.classList.add('active');
+                    } else {
+                        togglePublic.classList.remove('active');
+                    }
                     applyFilters();
                 } catch (error) {
                     console.error('Error toggling public view:', error);
@@ -234,9 +238,12 @@ function setupEventListeners() {
         if (togglePrivate) {
             togglePrivate.addEventListener('click', () => {
                 try {
-                    visibilityMode = 'private';
-                    togglePrivate.classList.add('active');
-                    if (togglePublic) togglePublic.classList.remove('active');
+                    showPrivate = !showPrivate;
+                    if (showPrivate) {
+                        togglePrivate.classList.add('active');
+                    } else {
+                        togglePrivate.classList.remove('active');
+                    }
                     applyFilters();
                 } catch (error) {
                     console.error('Error toggling private view:', error);
@@ -348,12 +355,13 @@ function applyUserFilter() {
             // Apply visibility filter based on mode
             filteredConfessions = allConfessions.filter(c => {
                 try {
-                    if (visibilityMode === 'public') {
-                        return c.visibility === 'True';
-                    } else if (visibilityMode === 'private') {
-                        return c.visibility === 'False';
-                    }
-                    return true;
+                    const isPublic = c.visibility === 'True';
+                    const isPrivate = c.visibility === 'False';
+                    
+                    if (showPublic && isPublic) return true;
+                    if (showPrivate && isPrivate) return true;
+                    
+                    return false;
                 } catch (e) {
                     return c.visibility === 'True';
                 }
@@ -398,12 +406,13 @@ function applyUserFilter() {
         // Apply visibility filter based on mode
         filteredConfessions = baseFilter.filter(c => {
             try {
-                if (visibilityMode === 'public') {
-                    return c.visibility === 'True';
-                } else if (visibilityMode === 'private') {
-                    return c.visibility === 'False';
-                }
-                return true;
+                const isPublic = c.visibility === 'True';
+                const isPrivate = c.visibility === 'False';
+                
+                if (showPublic && isPublic) return true;
+                if (showPrivate && isPrivate) return true;
+                
+                return false;
             } catch (e) {
                 return c.visibility === 'True';
             }
@@ -424,12 +433,13 @@ function applyFilters() {
             // Apply visibility filter based on mode
             filteredConfessions = allConfessions.filter(c => {
                 try {
-                    if (visibilityMode === 'public') {
-                        return c.visibility === 'True';
-                    } else if (visibilityMode === 'private') {
-                        return c.visibility === 'False';
-                    }
-                    return true;
+                    const isPublic = c.visibility === 'True';
+                    const isPrivate = c.visibility === 'False';
+                    
+                    if (showPublic && isPublic) return true;
+                    if (showPrivate && isPrivate) return true;
+                    
+                    return false;
                 } catch (e) {
                     return c.visibility === 'True';
                 }
@@ -552,6 +562,16 @@ function createConfessionCard(confession) {
     authorLabel.className = 'confession-author';
     authorLabel.appendChild(document.createTextNode('From: '));
     authorLabel.appendChild(authorSpan);
+    
+    // Add private indicator if visibility is False
+    if (confession.visibility === 'False') {
+        const privateIcon = document.createElement('span');
+        privateIcon.className = 'private-icon';
+        privateIcon.textContent = '🔒';
+        privateIcon.title = 'Private Confession';
+        authorLabel.appendChild(privateIcon);
+    }
+    
     authorDiv.appendChild(authorLabel);
     if (confession.authorRoll) {
         const authorMeta = document.createElement('div');

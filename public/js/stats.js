@@ -47,40 +47,8 @@ function loadAllData() {
                 skipEmptyLines: true,
                 complete: function(results) {
                     allConfessions = processConfessions(results.data);
-                    console.log(`Loaded ${allConfessions.length} public confessions`);
-                    
-                    // Now try to load hidden confessions
-                    loadingMessage.textContent = 'Loading hidden confessions...';
-                    fetch('data/hiddenConfessions.csv')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.text();
-                        })
-                        .then(hiddenConfessionsText => {
-                            loadingMessage.textContent = 'Parsing hidden confessions...';
-                            
-                            Papa.parse(hiddenConfessionsText, {
-                                header: true,
-                                skipEmptyLines: true,
-                                complete: function(hiddenResults) {
-                                    hiddenConfessions = processConfessions(hiddenResults.data);
-                                    console.log(`Loaded ${hiddenConfessions.length} hidden confessions`);
-                                    calculateAndDisplayStats();
-                                },
-                                error: function(error) {
-                                    console.warn('Could not parse hidden confessions:', error);
-                                    hiddenConfessions = [];
-                                    calculateAndDisplayStats();
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            console.warn('Could not load hidden confessions file:', error);
-                            hiddenConfessions = [];
-                            calculateAndDisplayStats();
-                        });
+                    console.log(`Loaded ${allConfessions.length} total confessions`);
+                    calculateAndDisplayStats();
                 },
                 error: function(error) {
                     loadingMessage.style.display = 'none';
@@ -134,9 +102,7 @@ function calculateAndDisplayStats() {
 
 // Calculate all statistics
 function calculateStats() {
-    const totalConfessions = allConfessions.length;
-    const totalHidden = hiddenConfessions.length;
-    const totalAll = totalConfessions + totalHidden;
+    const totalAll = allConfessions.length;
     
     // Visibility breakdown
     const publicConfessions = allConfessions.filter(c => c.visibility === 'True' || c.visibility === 'true').length;
@@ -168,8 +134,6 @@ function calculateStats() {
     const topRecipients = getTopN(recipientCounts, 10);
     
     return {
-        totalConfessions,
-        totalHidden,
         totalAll,
         publicConfessions,
         privateConfessions,
@@ -237,12 +201,12 @@ function displayStats(stats) {
                         <p>Total Confessions</p>
                     </div>
                     <div class="stat-card">
-                        <h3>${stats.totalConfessions.toLocaleString()}</h3>
+                        <h3>${stats.publicConfessions.toLocaleString()}</h3>
                         <p>Public</p>
                     </div>
                     <div class="stat-card">
-                        <h3>${stats.totalHidden.toLocaleString()}</h3>
-                        <p>Hidden</p>
+                        <h3>${stats.privateConfessions.toLocaleString()}</h3>
+                        <p>Private</p>
                     </div>
                     <div class="stat-card">
                         <h3>${stats.uniqueAuthors.toLocaleString()}</h3>
@@ -349,10 +313,10 @@ function renderCharts(stats) {
     new Chart(ctxVisibility, {
         type: 'doughnut',
         data: {
-            labels: ['Public', 'Private', 'Hidden'],
+            labels: ['Public', 'Private'],
             datasets: [{
-                data: [stats.publicConfessions, stats.privateConfessions, stats.totalHidden],
-                backgroundColor: ['#03dac6', '#bb86fc', '#3700b3'],
+                data: [stats.publicConfessions, stats.privateConfessions],
+                backgroundColor: ['#03dac6', '#bb86fc'],
                 borderWidth: 0,
                 hoverOffset: 10
             }]
@@ -409,12 +373,14 @@ function renderCharts(stats) {
     new Chart(ctxAuthors, {
         type: 'bar',
         data: {
-            labels: stats.topAuthors.map(a => a.name.length > 15 ? a.name.substr(0, 15) + '...' : a.name),
+            labels: stats.topAuthors.map(a => a.name),
             datasets: [{
                 label: 'Confessions Written',
                 data: stats.topAuthors.map(a => a.count),
                 backgroundColor: '#bb86fc',
-                borderRadius: 4
+                borderRadius: 4,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8
             }]
         },
         options: {
@@ -429,7 +395,14 @@ function renderCharts(stats) {
                     grid: { color: 'rgba(255, 255, 255, 0.05)' }
                 },
                 y: {
-                    grid: { display: false }
+                    grid: { display: false },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 0,
+                        font: {
+                            size: 11
+                        }
+                    }
                 }
             }
         }
@@ -440,12 +413,14 @@ function renderCharts(stats) {
     new Chart(ctxRecipients, {
         type: 'bar',
         data: {
-            labels: stats.topRecipients.map(a => a.name.length > 15 ? a.name.substr(0, 15) + '...' : a.name),
+            labels: stats.topRecipients.map(a => a.name),
             datasets: [{
                 label: 'Confessions Received',
                 data: stats.topRecipients.map(a => a.count),
                 backgroundColor: '#03dac6',
-                borderRadius: 4
+                borderRadius: 4,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8
             }]
         },
         options: {
@@ -460,7 +435,14 @@ function renderCharts(stats) {
                     grid: { color: 'rgba(255, 255, 255, 0.05)' }
                 },
                 y: {
-                    grid: { display: false }
+                    grid: { display: false },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 0,
+                        font: {
+                            size: 11
+                        }
+                    }
                 }
             }
         }

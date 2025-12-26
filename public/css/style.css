@@ -219,6 +219,7 @@ header h1 {
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     cursor: pointer;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
 .confession-card:hover {
@@ -271,6 +272,15 @@ header h1 {
 .clickable-name:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
+}
+
+.private-icon {
+    display: inline-block;
+    font-size: 0.9em;
+    margin-left: 8px;
+    opacity: 0.7;
+    cursor: help;
+    vertical-align: middle;
 }
 
 .confession-meta {

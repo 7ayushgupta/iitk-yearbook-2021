@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Graph - Yearbook Confessions</title>
+    <link rel="stylesheet" href="css/graph.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading social network...</div>
+    </div>
+
+    <!-- Graph Container -->
+    <div id="graph-container"></div>
+
+    <!-- Controls Panel -->
+    <div class="controls-panel">
+        <h2>🕸️ Social Graph</h2>
+        
+        <div class="control-group">
+            <label for="searchInput">Search Person</label>
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="Type a name..."
+            >
+        </div>
+
+        <div class="control-group">
+            <label for="minInteractionsSlider">
+                Minimum Interactions: <span id="minInteractionsValue" class="slider-value">4</span>
+            </label>
+            <div class="slider-container">
+                <input 
+                    type="range" 
+                    id="minInteractionsSlider" 
+                    class="slider" 
+                    min="1" 
+                    max="10" 
+                    value="4"
+                >
+            </div>
+            <div class="stats-info">
+                Showing connections with <span id="connectionCount">0</span>+ messages
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label for="topPeopleToggle">
+                Top People Filter: <span id="topPeopleValue" class="slider-value">Off</span>
+            </label>
+            <div class="slider-container">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="topPeopleToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div id="topPeopleSliderContainer" style="display: block; margin-top: 10px;">
+                <label for="topPeopleSlider" style="font-size: 0.85rem; color: var(--text-secondary);">
+                    Number of people: <span id="topPeopleCount" class="slider-value">100</span>
+                </label>
+                <input 
+                    type="range" 
+                    id="topPeopleSlider" 
+                    class="slider" 
+                    min="10" 
+                    max="500" 
+                    step="10"
+                    value="100"
+                >
+            </div>
+            <div class="stats-info">
+                <span id="topPeopleDescription">Show all people</span>
+            </div>
+        </div>
+
+        <div class="stats-info">
+            <div>Nodes: <span id="nodeCount">0</span></div>
+            <div>Links: <span id="linkCount">0</span></div>
+        </div>
+    </div>
+
+    <!-- Sidebar for Details -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3 id="sidebarTitle">Details</h3>
+            <button class="close-btn" id="closeSidebar">×</button>
+        </div>
+        <div class="sidebar-content" id="sidebarContent">
+            <div class="empty-state">
+                <div class="empty-state-icon">👆</div>
+                <p>Click on a node or link to view details</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Button -->
+    <a href="index.html" class="nav-button">← Dashboard</a>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.70.12/dist/3d-force-graph.min.js"></script>
+    <script src="js/graph.js"></script>
+</body>
+</html>
+
