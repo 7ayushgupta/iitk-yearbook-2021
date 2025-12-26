@@ -60,26 +60,27 @@ function initializeUIState() {
 
 // Setup event listeners
 function setupEventListeners() {
-    const searchInput = document.getElementById('searchInput');
+    const searchPersonSelect = document.getElementById('searchPersonSelect');
     const minInteractionsSlider = document.getElementById('minInteractionsSlider');
     const closeSidebar = document.getElementById('closeSidebar');
     const topPeopleToggle = document.getElementById('topPeopleToggle');
     const topPeopleSlider = document.getElementById('topPeopleSlider');
     const topPeopleSliderContainer = document.getElementById('topPeopleSliderContainer');
 
-    // Search functionality
-    if (searchInput) {
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = e.target.value.toLowerCase().trim();
-                if (query) {
-                    highlightNode(query);
-                } else {
-                    resetHighlight();
+    // Search functionality with dropdown
+    if (searchPersonSelect) {
+        searchPersonSelect.addEventListener('change', (e) => {
+            const selectedName = e.target.value;
+            if (selectedName) {
+                const matchingNode = filteredGraphData.nodes.find(node => 
+                    node.name === selectedName
+                );
+                if (matchingNode) {
+                    highlightNodeByName(matchingNode.name);
                 }
-            }, 300);
+            } else {
+                resetHighlight();
+            }
         });
     }
 
@@ -248,7 +249,7 @@ function buildGraph(confessions) {
 
     console.log(`Graph built: ${graphData.nodes.length} nodes, ${graphData.links.length} links`);
 
-    // Initial filter and render
+    // Initial filter and render (this will also update the dropdown)
     filterGraph();
 }
 
@@ -403,6 +404,43 @@ function filterGraph() {
     } else {
         initializeGraph();
     }
+    
+    // Update search dropdown to reflect filtered nodes
+    updateSearchDropdown();
+}
+
+// Update search dropdown with currently visible nodes
+function updateSearchDropdown() {
+    const searchPersonSelect = document.getElementById('searchPersonSelect');
+    if (!searchPersonSelect) return;
+    
+    // Get currently selected value
+    const selectedValue = searchPersonSelect.value;
+    
+    // Clear existing options except the first one
+    while (searchPersonSelect.children.length > 1) {
+        searchPersonSelect.removeChild(searchPersonSelect.lastChild);
+    }
+    
+    // Get all unique people from filtered graph data, sorted alphabetically
+    const visiblePeople = Array.from(new Set(filteredGraphData.nodes.map(node => node.name)))
+        .filter(name => name && name !== 'Unknown')
+        .sort();
+    
+    // Add options to dropdown
+    visiblePeople.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        searchPersonSelect.appendChild(option);
+    });
+    
+    // Restore selection if it's still valid
+    if (selectedValue && visiblePeople.includes(selectedValue)) {
+        searchPersonSelect.value = selectedValue;
+    } else {
+        searchPersonSelect.value = '';
+    }
 }
 
 // Get node color based on community
@@ -481,58 +519,104 @@ function highlightDefaultPerson() {
     });
 
     if (matchingNode && Graph) {
+        // Update dropdown selection
+        const searchPersonSelect = document.getElementById('searchPersonSelect');
+        if (searchPersonSelect && matchingNode.name) {
+            searchPersonSelect.value = matchingNode.name;
+        }
+        
         highlightedNodeId = matchingNode.id;
         
         // Re-render to update colors
         Graph.graphData(filteredGraphData);
         
-        // Wait for graph to update, then center on node (3D version)
+        // Focus on the node
         setTimeout(() => {
-            if (matchingNode.x !== undefined && matchingNode.y !== undefined && matchingNode.z !== undefined) {
-                Graph.cameraPosition(
-                    { x: matchingNode.x + 100, y: matchingNode.y + 100, z: matchingNode.z + 100 },
-                    { x: matchingNode.x, y: matchingNode.y, z: matchingNode.z },
-                    2000
-                );
-            } else {
-                // Use zoomToFit to focus on this node
-                Graph.zoomToFit(400, 20, node => node.id === matchingNode.id);
-            }
-        }, 100);
+            focusOnNode(matchingNode);
+        }, 200);
         
         // Show details
         showNodeDetails(matchingNode);
     }
 }
 
-// Highlight node by search
+// Highlight node by name (exact match) and focus on it
+function highlightNodeByName(name) {
+    const matchingNode = filteredGraphData.nodes.find(node => 
+        node.name === name
+    );
+
+    if (matchingNode && Graph) {
+        highlightedNodeId = matchingNode.id;
+        
+        // Re-render to update colors
+        Graph.graphData(filteredGraphData);
+        
+        // Focus on the node - wait for graph to stabilize
+        setTimeout(() => {
+            focusOnNode(matchingNode);
+        }, 200);
+        
+        // Show details
+        showNodeDetails(matchingNode);
+    }
+}
+
+// Focus camera on a specific node
+function focusOnNode(node) {
+    if (!Graph || !node) return;
+    
+    // Try multiple times to get node position (graph might still be settling)
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    const tryFocus = () => {
+        attempts++;
+        
+        // Get node position from the graph
+        const nodeData = filteredGraphData.nodes.find(n => n.id === node.id);
+        if (!nodeData) {
+            if (attempts < maxAttempts) {
+                setTimeout(tryFocus, 100);
+            }
+            return;
+        }
+        
+        // Check if node has position data
+        if (nodeData.x !== undefined && nodeData.y !== undefined && nodeData.z !== undefined) {
+            // Calculate camera position - position it at a good viewing angle
+            const distance = 250; // Distance from node
+            const cameraX = nodeData.x + distance;
+            const cameraY = nodeData.y + distance;
+            const cameraZ = nodeData.z + distance;
+            
+            Graph.cameraPosition(
+                { x: cameraX, y: cameraY, z: cameraZ },
+                { x: nodeData.x, y: nodeData.y, z: nodeData.z },
+                1500
+            );
+        } else {
+            // If no position yet, wait a bit more and try again
+            if (attempts < maxAttempts) {
+                setTimeout(tryFocus, 100);
+            } else {
+                // Fallback: use zoomToFit to focus on this node
+                Graph.zoomToFit(300, 20, n => n.id === node.id);
+            }
+        }
+    };
+    
+    tryFocus();
+}
+
+// Highlight node by search (for backward compatibility)
 function highlightNode(query) {
     const matchingNode = filteredGraphData.nodes.find(node => 
         node.name.toLowerCase().includes(query)
     );
 
     if (matchingNode) {
-        highlightedNodeId = matchingNode.id;
-        
-        // Re-render to update colors
-        Graph.graphData(filteredGraphData);
-        
-        // Wait for graph to update, then center on node (3D version)
-        setTimeout(() => {
-            if (matchingNode.x !== undefined && matchingNode.y !== undefined && matchingNode.z !== undefined) {
-                Graph.cameraPosition(
-                    { x: matchingNode.x + 100, y: matchingNode.y + 100, z: matchingNode.z + 100 },
-                    { x: matchingNode.x, y: matchingNode.y, z: matchingNode.z },
-                    2000
-                );
-            } else {
-                // Use zoomToFit to focus on this node
-                Graph.zoomToFit(400, 20, node => node.id === matchingNode.id);
-            }
-        }, 100);
-        
-        // Show details
-        showNodeDetails(matchingNode);
+        highlightNodeByName(matchingNode.name);
     }
 }
 
