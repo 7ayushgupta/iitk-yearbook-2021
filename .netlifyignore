@@ -1,0 +1,17 @@
+# Exclude directories with many files that Netlify doesn't need to watch
+archive/
+chhaatr-khoj/
+backup/
+data_raw/
+personWiseMemoirs/
+*.pkl
+*.ipynb
+*.txt
+*.pdf
+allConfessions.csv
+hiddenConfessions.csv
+hinglishStopwords.txt
+
+# Keep only the public folder
+!public/
+

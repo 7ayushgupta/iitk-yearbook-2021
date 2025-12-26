@@ -1,0 +1,9 @@
+{
+  "ignore_dirs": [
+    "chhaatr-khoj",
+    "backup",
+    "data_raw",
+    "personWiseMemoirs",
+    "node_modules"
+  ]
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yearbook Confessions</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="pageTitle">Yearbook Confessions</h1>
+            <p class="subtitle" id="pageSubtitle">Explore the collection of confessions and memoirs</p>
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+                <a href="summary.html" class="back-link">📊 View Statistics</a>
+                <div id="backToAll" style="display: none;">
+                    <a href="?" class="back-link">← Back to All Confessions</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search by author, recipient, or text content..."
+                    class="search-input"
+                >
+            </div>
+            <div class="filter-container">
+                <select id="filterAuthor" class="filter-select">
+                    <option value="">All Authors</option>
+                </select>
+                <select id="filterRecipient" class="filter-select">
+                    <option value="">All Recipients</option>
+                </select>
+            </div>
+            <div class="visibility-toggle-container">
+                <button id="togglePublic" class="toggle-btn active">Public</button>
+                <button id="togglePrivate" class="toggle-btn">Private</button>
+            </div>
+            <div id="userPageToggle" class="user-toggle-container" style="display: none;">
+                <button id="toggleReceived" class="toggle-btn active">Received</button>
+                <button id="toggleWritten" class="toggle-btn">Written</button>
+            </div>
+            <div class="stats">
+                <span id="resultCount">Loading...</span>
+            </div>
+        </div>
+
+        <div id="loadingMessage" class="loading">Loading confessions...</div>
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div id="confessionsContainer" class="confessions-grid"></div>
+
+        <div id="pagination" class="pagination"></div>
+    </div>
+
+    <!-- PapaParse library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+

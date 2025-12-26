@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yearbook Confessions - Statistics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/stats.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">← Back to Dashboard</a>
+            <div style="margin-top: 20px;">
+                <h1>Data Insights</h1>
+                <p class="subtitle">Exploring the hidden patterns in yearbook confessions</p>
+            </div>
+        </header>
+
+        <div id="loadingMessage" class="loading">Analyzing data patterns...</div>
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div id="statsContent" style="display: none;">
+            <!-- Content populated by JS -->
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/stats.js"></script>
+</body>
+</html>
