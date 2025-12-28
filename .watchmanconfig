@@ -2,7 +2,7 @@
   "ignore_dirs": [
     "chhaatr-khoj",
     "backup",
-    "data_raw",
+    "data",
     "personWiseMemoirs",
     "node_modules"
   ]

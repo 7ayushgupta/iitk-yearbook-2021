@@ -54,4 +54,9 @@ build/
 *.temp
 *.log
 
+# chhaatr-khoj directory
+chhaatr-khoj/
+
+# Source data directory
+data/
 

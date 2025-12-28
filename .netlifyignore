@@ -2,14 +2,12 @@
 archive/
 chhaatr-khoj/
 backup/
-data_raw/
+data/
 personWiseMemoirs/
 *.pkl
 *.ipynb
 *.txt
 *.pdf
-allConfessions.csv
-hiddenConfessions.csv
 hinglishStopwords.txt
 
 # Keep only the public folder
