@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         }
         
+        setupCopyLink();
         loadAllData();
     } catch (error) {
         console.error('Error initializing statistics page:', error);
@@ -28,7 +29,7 @@ function loadAllData() {
     const loadingMessage = document.getElementById('loadingMessage');
     const errorMessage = document.getElementById('errorMessage');
     
-    loadingMessage.textContent = 'Loading confessions data...';
+    loadingMessage.textContent = 'Loading memoirs data...';
     
     // Load all confessions first
     fetch('data/allConfessions.csv')
@@ -39,7 +40,7 @@ function loadAllData() {
             return response.text();
         })
         .then(allConfessionsText => {
-            loadingMessage.textContent = 'Parsing all confessions...';
+            loadingMessage.textContent = 'Parsing all memoirs...';
             
             // Parse all confessions
             Papa.parse(allConfessionsText, {
@@ -445,6 +446,50 @@ function renderCharts(stats) {
                     }
                 }
             }
+        }
+    });
+}
+
+// Setup copy link functionality
+function setupCopyLink() {
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    if (!copyLinkBtn) return;
+    
+    const shareUrl = 'https://x.com/ayushGup7/status/2005006627238543657?s=20';
+    
+    copyLinkBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            copyLinkBtn.classList.add('copied');
+            const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+            copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyLinkBtn.classList.remove('copied');
+                copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                copyLinkBtn.classList.add('copied');
+                const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+                copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+                setTimeout(() => {
+                    copyLinkBtn.classList.remove('copied');
+                    copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+                }, 2000);
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
         }
     });
 }

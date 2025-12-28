@@ -13,12 +13,16 @@ let userViewMode = 'received'; // 'received' or 'written'
 let showPublic = true;
 let showPrivate = false;
 
+// Authentication state
+let validUsernames = [];
+let usernameToNameMap = {}; // Maps username -> full name
+const AUTH_STORAGE_KEY = 'yearbook_authenticated';
+const USERNAME_STORAGE_KEY = 'yearbook_username';
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        parseQueryParameters();
-        setupEventListeners();
-        loadCSV();
+        checkAuthentication();
     } catch (error) {
         console.error('Error initializing application:', error);
         const errorMessage = document.getElementById('errorMessage');
@@ -29,12 +33,171 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Check authentication status
+function checkAuthentication() {
+    const isAuthenticated = localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+    
+    if (isAuthenticated) {
+        showAuthenticatedContent();
+    } else {
+        loadUsernames();
+    }
+}
+
+// Load usernames from JSON file
+function loadUsernames() {
+    fetch('data/usernames.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(usernames => {
+            validUsernames = usernames;
+            showLoginInterface();
+            setupLoginEventListeners();
+        })
+        .catch(error => {
+            console.error('Error loading usernames:', error);
+            const loginError = document.getElementById('loginError');
+            if (loginError) {
+                loginError.textContent = 'Error loading usernames. Please refresh the page.';
+                loginError.style.display = 'block';
+            }
+        });
+}
+
+// Show login interface
+function showLoginInterface() {
+    const loginBar = document.getElementById('loginBar');
+    const authenticatedContent = document.getElementById('authenticatedContent');
+    
+    if (loginBar) loginBar.style.display = 'flex';
+    if (authenticatedContent) authenticatedContent.style.display = 'none';
+}
+
+// Show authenticated content
+function showAuthenticatedContent() {
+    const loginBar = document.getElementById('loginBar');
+    const authenticatedContent = document.getElementById('authenticatedContent');
+    
+    if (loginBar) loginBar.style.display = 'none';
+    if (authenticatedContent) authenticatedContent.style.display = 'block';
+    
+    // Setup logout button
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            handleLogout();
+        });
+    }
+    
+    // Load username mapping first, then initialize the application
+    loadUsernameMapping().then(() => {
+        parseQueryParameters();
+        setupEventListeners();
+        setupCopyLink();
+        loadCSV();
+    });
+}
+
+// Load username to name mapping
+function loadUsernameMapping() {
+    return fetch('data/username_to_name.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(mapping => {
+            usernameToNameMap = mapping;
+        })
+        .catch(error => {
+            console.error('Error loading username mapping:', error);
+            // Continue even if mapping fails to load
+        });
+}
+
+// Setup login event listeners
+function setupLoginEventListeners() {
+    const usernameInput = document.getElementById('usernameInput');
+    const loginButton = document.getElementById('loginButton');
+    const loginError = document.getElementById('loginError');
+    
+    if (usernameInput && loginButton) {
+        // Handle login button click
+        loginButton.addEventListener('click', () => {
+            handleLogin();
+        });
+        
+        // Handle Enter key press
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    }
+}
+
+// Handle login
+function handleLogin() {
+    const usernameInput = document.getElementById('usernameInput');
+    const loginError = document.getElementById('loginError');
+    
+    if (!usernameInput) return;
+    
+    const username = usernameInput.value.trim().toLowerCase();
+    
+    // Hide previous errors
+    if (loginError) {
+        loginError.style.display = 'none';
+    }
+    
+    // Check if username is valid
+    if (!username) {
+        if (loginError) {
+            loginError.textContent = 'Please enter a username.';
+            loginError.style.display = 'block';
+        }
+        return;
+    }
+    
+    // Check if username exists in the list (case-insensitive)
+    const isValid = validUsernames.some(u => u.toLowerCase() === username);
+    
+    if (isValid) {
+        // Store authentication state
+        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        localStorage.setItem(USERNAME_STORAGE_KEY, username);
+        
+        // Show authenticated content
+        showAuthenticatedContent();
+    } else {
+        if (loginError) {
+            loginError.textContent = 'Invalid username. Please try again.';
+            loginError.style.display = 'block';
+        }
+        usernameInput.value = '';
+    }
+}
+
+// Handle logout
+function handleLogout() {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem(USERNAME_STORAGE_KEY);
+    
+    // Reload the page to show login interface
+    window.location.reload();
+}
+
 // Load and parse CSV file
 function loadCSV() {
     const loadingMessage = document.getElementById('loadingMessage');
     const errorMessage = document.getElementById('errorMessage');
     
-    loadingMessage.textContent = 'Loading confessions...';
+    loadingMessage.textContent = 'Loading memoirs...';
     
     fetch('data/allConfessions.csv')
         .then(response => {
@@ -125,6 +288,12 @@ function loadCSV() {
                             }
                             
                             populateFilters();
+                            
+                            // Auto-select logged-in user as recipient if not on a user page
+                            if (!currentUser && !currentUserRoll) {
+                                setDefaultRecipientFilter();
+                            }
+                            
                             applyFilters();
                             renderConfessions();
                             updateStats();
@@ -284,6 +453,38 @@ function setupEventListeners() {
     }
 }
 
+// Set default recipient filter to logged-in user
+function setDefaultRecipientFilter() {
+    try {
+        const loggedInUsername = localStorage.getItem(USERNAME_STORAGE_KEY);
+        if (!loggedInUsername || !usernameToNameMap) return;
+        
+        const loggedInName = usernameToNameMap[loggedInUsername.toLowerCase()];
+        if (!loggedInName) return;
+        
+        const filterRecipient = document.getElementById('filterRecipient');
+        if (!filterRecipient) return;
+        
+        // Find the option that matches the user's name (case-insensitive)
+        const options = Array.from(filterRecipient.options);
+        const matchingOption = options.find(opt => 
+            opt.value && opt.value.toUpperCase() === loggedInName.toUpperCase()
+        );
+        
+        if (matchingOption) {
+            filterRecipient.value = matchingOption.value;
+            // Also enable private toggle so they can see their private confessions
+            showPrivate = true;
+            const togglePrivate = document.getElementById('togglePrivate');
+            if (togglePrivate) {
+                togglePrivate.classList.add('active');
+            }
+        }
+    } catch (error) {
+        console.error('Error setting default recipient filter:', error);
+    }
+}
+
 // Populate filter dropdowns
 function populateFilters() {
     try {
@@ -338,10 +539,10 @@ function setupUserPage() {
     
     // Update header
     const userName = currentUser || `Roll ${currentUserRoll}`;
-    pageTitle.textContent = `Confessions for ${userName}`;
+    pageTitle.textContent = `Memoirs for ${userName}`;
     pageSubtitle.textContent = userViewMode === 'received' 
-        ? 'Confessions received by this user' 
-        : 'Confessions written by this user';
+        ? 'Memoirs received by this user' 
+        : 'Memoirs written by this user';
     
     // Show user page elements
     backToAll.style.display = 'block';
@@ -353,13 +554,12 @@ function applyUserFilter() {
     try {
         if (!currentUser && !currentUserRoll) {
             // Apply visibility filter based on mode
+            // Private confessions should never be shown on main page (only to recipients)
             filteredConfessions = allConfessions.filter(c => {
                 try {
                     const isPublic = c.visibility === 'True';
-                    const isPrivate = c.visibility === 'False';
-                    
-                    if (showPublic && isPublic) return true;
-                    if (showPrivate && isPrivate) return true;
+                    // Never show private confessions on main page
+                    if (isPublic && showPublic) return true;
                     
                     return false;
                 } catch (e) {
@@ -404,13 +604,25 @@ function applyUserFilter() {
         });
         
         // Apply visibility filter based on mode
+        // Private confessions are only visible to the recipient
         filteredConfessions = baseFilter.filter(c => {
             try {
                 const isPublic = c.visibility === 'True';
                 const isPrivate = c.visibility === 'False';
                 
+                // Always show public confessions if enabled
                 if (showPublic && isPublic) return true;
-                if (showPrivate && isPrivate) return true;
+                
+                // Private confessions: only show if viewing "received" mode (user is recipient)
+                if (showPrivate && isPrivate) {
+                    // Only show private confessions when viewing received confessions
+                    // This means the logged-in user is the recipient
+                    if (userViewMode === 'received') {
+                        return true;
+                    }
+                    // Never show private confessions in "written" mode or to non-recipients
+                    return false;
+                }
                 
                 return false;
             } catch (e) {
@@ -430,20 +642,8 @@ function applyFilters() {
         if (currentUser || currentUserRoll) {
             applyUserFilter();
         } else {
-            // Apply visibility filter based on mode
-            filteredConfessions = allConfessions.filter(c => {
-                try {
-                    const isPublic = c.visibility === 'True';
-                    const isPrivate = c.visibility === 'False';
-                    
-                    if (showPublic && isPublic) return true;
-                    if (showPrivate && isPrivate) return true;
-                    
-                    return false;
-                } catch (e) {
-                    return c.visibility === 'True';
-                }
-            });
+            // Start with all confessions when not on user page
+            filteredConfessions = allConfessions;
         }
         
         const searchInput = document.getElementById('searchInput');
@@ -453,6 +653,11 @@ function applyFilters() {
         const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const authorFilter = filterAuthor ? filterAuthor.value : '';
         const recipientFilter = filterRecipient ? filterRecipient.value : '';
+        
+        // Check if logged-in user matches the selected recipient (case-insensitive)
+        const loggedInUsername = localStorage.getItem(USERNAME_STORAGE_KEY);
+        const loggedInName = loggedInUsername ? (usernameToNameMap[loggedInUsername.toLowerCase()] || '').toUpperCase().trim() : null;
+        const isViewingOwnRecipient = loggedInName && recipientFilter && loggedInName === recipientFilter.toUpperCase().trim();
         
         filteredConfessions = filteredConfessions.filter(confession => {
             try {
@@ -465,6 +670,20 @@ function applyFilters() {
                 if (recipientFilter && confession.recipient !== recipientFilter) {
                     return false;
                 }
+                
+                // Visibility filter
+                const isPublic = confession.visibility === 'True';
+                const isPrivate = confession.visibility === 'False';
+                
+                // If filtering by recipient and it's the logged-in user, allow private confessions
+                if (recipientFilter && isViewingOwnRecipient) {
+                    if (showPublic && isPublic) return true;
+                    if (showPrivate && isPrivate) return true;
+                    return false;
+                }
+                
+                // Otherwise, only show public confessions on main page
+                if (isPublic && showPublic) return true;
                 
                 // Search filter
                 if (searchTerm) {
@@ -502,7 +721,7 @@ function renderConfessions() {
     const pageConfessions = filteredConfessions.slice(startIndex, endIndex);
     
     if (pageConfessions.length === 0) {
-        container.innerHTML = '<div class="no-results">No confessions found matching your criteria.</div>';
+        container.innerHTML = '<div class="no-results">No memoirs found matching your criteria.</div>';
         document.getElementById('pagination').innerHTML = '';
         return;
     }
@@ -568,7 +787,7 @@ function createConfessionCard(confession) {
         const privateIcon = document.createElement('span');
         privateIcon.className = 'private-icon';
         privateIcon.textContent = '🔒';
-        privateIcon.title = 'Private Confession';
+        privateIcon.title = 'Private Memoir';
         authorLabel.appendChild(privateIcon);
     }
     
@@ -673,6 +892,50 @@ function changePage(page) {
 // Make changePage globally accessible
 window.changePage = changePage;
 
+// Setup copy link functionality
+function setupCopyLink() {
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    if (!copyLinkBtn) return;
+    
+    const shareUrl = 'https://x.com/ayushGup7/status/2005006627238543657?s=20';
+    
+    copyLinkBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            copyLinkBtn.classList.add('copied');
+            const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+            copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyLinkBtn.classList.remove('copied');
+                copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                copyLinkBtn.classList.add('copied');
+                const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+                copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+                setTimeout(() => {
+                    copyLinkBtn.classList.remove('copied');
+                    copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+                }, 2000);
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    });
+}
+
 // Update statistics
 function updateStats() {
     const resultCount = document.getElementById('resultCount');
@@ -680,9 +943,9 @@ function updateStats() {
     const totalAll = allConfessions.length;
     
     if (total === totalAll) {
-        resultCount.textContent = `Showing all ${total.toLocaleString()} confessions`;
+        resultCount.textContent = `Showing all ${total.toLocaleString()} memoirs`;
     } else {
-        resultCount.textContent = `Showing ${total.toLocaleString()} of ${totalAll.toLocaleString()} confessions`;
+        resultCount.textContent = `Showing ${total.toLocaleString()} of ${totalAll.toLocaleString()} memoirs`;
     }
 }
 

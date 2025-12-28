@@ -3,20 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yearbook Confessions</title>
+    <title>Yearbook Memoirs</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Login Bar -->
+    <div id="loginBar" class="login-bar">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>IITK Year 2021 Yearbook</h1>
+                <p class="login-subtitle">Enter your username as in IITK (username@iitk.ac.in)</p>
+            </div>
+            <div class="login-form">
+                <label for="usernameInput">IITK Username</label>
+                <input 
+                    type="text" 
+                    id="usernameInput" 
+                    placeholder="Enter your username..."
+                    class="username-input"
+                >
+                <button id="loginButton" class="login-button">Login</button>
+            </div>
+            <p class="login-note">Note: Only usernames in/before Y17 batch would work</p>
+            <div id="loginError" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Authenticated Content -->
+    <div id="authenticatedContent" class="container" style="display: none;">
         <header>
-            <h1 id="pageTitle">Yearbook Confessions</h1>
-            <p class="subtitle" id="pageSubtitle">Explore the collection of confessions and memoirs</p>
+            <h1 id="pageTitle">Yearbook Memoirs</h1>
+            <p class="subtitle" id="pageSubtitle">Explore the collection of memoirs</p>
             <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
                 <a href="summary.html" class="back-link">📊 View Statistics</a>
                 <a href="graph.html" class="back-link">🕸️ Social Graph</a>
                 <div id="backToAll" style="display: none;">
-                    <a href="?" class="back-link">← Back to All Confessions</a>
+                    <a href="?" class="back-link">← Back to All Memoirs</a>
                 </div>
+                <button id="logoutButton" class="logout-button">Logout</button>
             </div>
         </header>
 
@@ -50,13 +74,24 @@
             </div>
         </div>
 
-        <div id="loadingMessage" class="loading">Loading confessions...</div>
+        <div id="loadingMessage" class="loading">Loading memoirs...</div>
         <div id="errorMessage" class="error" style="display: none;"></div>
 
         <div id="confessionsContainer" class="confessions-grid"></div>
 
         <div id="pagination" class="pagination"></div>
     </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <div class="footer-content">
+            <span class="footer-text">Share with your friends:</span>
+            <button id="copyLinkBtn" class="copy-link-btn" title="Copy link">
+                <span class="copy-icon">🔗</span>
+                <span class="copy-text">Copy link</span>
+            </button>
+        </div>
+    </footer>
 
     <!-- PapaParse library from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>

@@ -22,6 +22,7 @@ const colors = {
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeUIState();
+    setupCopyLink();
     loadAllData();
 });
 
@@ -101,7 +102,7 @@ function setupEventListeners() {
             document.getElementById('topPeopleValue').textContent = topPeopleFilterEnabled ? 'On' : 'Off';
             topPeopleSliderContainer.style.display = topPeopleFilterEnabled ? 'block' : 'none';
             document.getElementById('topPeopleDescription').textContent = 
-                topPeopleFilterEnabled ? `Showing top ${topPeopleCount} people by confessions` : 'Show all people';
+                topPeopleFilterEnabled ? `Showing top ${topPeopleCount} people by memoirs` : 'Show all people';
             
             // Re-filter graph
             filterGraph();
@@ -114,7 +115,7 @@ function setupEventListeners() {
             topPeopleCount = parseInt(e.target.value);
             document.getElementById('topPeopleCount').textContent = topPeopleCount;
             document.getElementById('topPeopleDescription').textContent = 
-                topPeopleFilterEnabled ? `Showing top ${topPeopleCount} people by confessions` : 'Show all people';
+                topPeopleFilterEnabled ? `Showing top ${topPeopleCount} people by memoirs` : 'Show all people';
             
             // Re-filter graph if toggle is enabled
             if (topPeopleFilterEnabled) {
@@ -766,3 +767,46 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// Setup copy link functionality
+function setupCopyLink() {
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    if (!copyLinkBtn) return;
+    
+    const shareUrl = 'https://x.com/ayushGup7/status/2005006627238543657?s=20';
+    
+    copyLinkBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            copyLinkBtn.classList.add('copied');
+            const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+            copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyLinkBtn.classList.remove('copied');
+                copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                copyLinkBtn.classList.add('copied');
+                const originalText = copyLinkBtn.querySelector('.copy-text').textContent;
+                copyLinkBtn.querySelector('.copy-text').textContent = 'Copied!';
+                setTimeout(() => {
+                    copyLinkBtn.classList.remove('copied');
+                    copyLinkBtn.querySelector('.copy-text').textContent = originalText;
+                }, 2000);
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    });
+}
